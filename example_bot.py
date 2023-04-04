@@ -50,4 +50,4 @@ async def on_message(message):
     if message.content.startswith('!embed'):
         await message.channel.send(embed=embed)
 
-client.run('MTA5MTkzNzMzNDA0OTY1NjgzMg.GqPzMD.-h9moiZvHlA2n1DGEYroR6aitX4Of7A9YbZFnI')
+client.run('')
