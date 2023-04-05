@@ -6,7 +6,7 @@ Current build is just building the fundamentals.
 # Setting up Environment
 Make sure virtualenv is installed using command `pip install virtualenv`
 
-Run `virtualenv bot-env -p python3.10.10` to create environment (**You must have this version of Python already installed**)
+Run `python -m virtualenv bot-env -p python3.10.10` to create environment (**You must have this version of Python already installed**)
 
 On Linux/Mac, run `source bot-env/bin/activate`
 

@@ -3,10 +3,12 @@
 import discord
 from discord import app_commands
 
+
 intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
+
 
 @client.event
 async def on_ready():
@@ -49,5 +51,6 @@ embed.set_footer(text="This is the footer. It contains text at the bottom of the
 async def on_message(message):
     if message.content.startswith('!embed'):
         await message.channel.send(embed=embed)
+
 
 client.run('')
