@@ -1,0 +1,32 @@
+{
+    "bow": {
+        "icon": null,
+        "rarity": "common",
+        "class": {
+            "archer": true
+        },
+        "stats": {
+
+        }
+    },
+    "staff": {
+        "icon": null,
+        "rarity": "common",
+        "class": {
+            "mage": true
+        },
+        "stats": {
+            
+        }
+    },
+    "sword": {
+        "icon": null,
+        "rarity": "common",
+        "class": {
+            "knight": true
+        },
+        "stats": {
+            
+        }
+    }
+}

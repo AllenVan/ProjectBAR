@@ -1,11 +1,18 @@
 import asyncio
 import discord
+import json
 import os
 
 from discord.ext import commands
 
 
 class BAR(commands.Bot):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        with open("resources/classes.json", encoding="utf8") as file:
+            self._classes = json.loads(file.read())
+
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
 
@@ -25,8 +32,7 @@ class BAR(commands.Bot):
 # Client Setup
 intents = discord.Intents.all()
 intents.message_content = True
-client = BAR(command_prefix='~', intents=intents)
-
+client = BAR(command_prefix='.', intents=intents)
 
 async def main():
     async with client:
