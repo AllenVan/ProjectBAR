@@ -40,6 +40,6 @@ client = BAR(command_prefix='.', intents=intents)
 
 async def main():
     async with client:
-        await client.start("MTA5MTcxOTQzNzUxMTU3NzYwMA.GkH0Uo.xlw7bZ7N7kALp_RPqHmN0wbNtsfuCzI0tq7bhY") 
+        await client.start("TOKEN") 
 
 asyncio.run(main())
