@@ -1,8 +1,10 @@
 import asyncio
 import discord
 import json
-import os
 import logging
+import os
+import pathlib
+
 
 # TODO: Add logging to class
 logging.basicConfig(level=logging.INFO)
@@ -39,7 +41,12 @@ intents.message_content = True
 client = BAR(command_prefix='.', intents=intents)
 
 async def main():
+
+    credentials_file_path = pathlib.Path("credentials", "token.json")
+    with open(credentials_file_path) as cred_file:
+        token = json.loads(cred_file.read())["token"]
+
     async with client:
-        await client.start("TOKEN") 
+        await client.start(token) 
 
 asyncio.run(main())
