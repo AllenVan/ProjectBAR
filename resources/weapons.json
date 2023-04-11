@@ -1,6 +1,6 @@
 {
     "bow": {
-        "icon": null,
+        "icon": "🏹",
         "rarity": "common",
         "class": {
             "archer": true
@@ -10,7 +10,7 @@
         }
     },
     "staff": {
-        "icon": null,
+        "icon": "🔥",
         "rarity": "common",
         "class": {
             "mage": true
@@ -20,7 +20,7 @@
         }
     },
     "sword": {
-        "icon": null,
+        "icon": "⚔️",
         "rarity": "common",
         "class": {
             "knight": true

@@ -2,28 +2,22 @@
     "archer": {
         "icon": "🏹",
         "starting_inventory": {
-            "weapon": null,
-            "items": {
-
-            }
+            "weapon": "bow",
+            "items": {}
         }
     },
     "knight": {
         "icon": "🛡️",
         "starting_inventory": {
-            "weapon": null,
-            "items": {
-                
-            }
+            "weapon": "sword",
+            "items": {}
         }
     },
     "mage": {
         "icon": "🧙",
         "starting_inventory": {
-            "weapon": null,
-            "items": {
-                
-            }
+            "weapon": "staff",
+            "items": {}
         }
     }
 }

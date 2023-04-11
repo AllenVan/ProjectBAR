@@ -2,6 +2,10 @@ import asyncio
 import discord
 import json
 import os
+import logging
+
+# TODO: Add logging to class
+logging.basicConfig(level=logging.INFO)
 
 from discord.ext import commands
 
@@ -36,6 +40,6 @@ client = BAR(command_prefix='.', intents=intents)
 
 async def main():
     async with client:
-        await client.start("TOKEN") 
+        await client.start("MTA5MTcxOTQzNzUxMTU3NzYwMA.GkH0Uo.xlw7bZ7N7kALp_RPqHmN0wbNtsfuCzI0tq7bhY") 
 
 asyncio.run(main())

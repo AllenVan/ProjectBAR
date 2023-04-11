@@ -5,7 +5,7 @@ from discord.ext import commands
 class Select(commands.Cog):
 	def __init__(self, client):
 		self.client = client
-		self.user_class = None
+		self.class_name = None
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -20,18 +20,28 @@ class Select(commands.Cog):
 		embed_message = discord.Embed(
 			title="Select Class",
 			description="\n\n".join(class_list),
-			color=discord.Color.light_gray())
+			color=discord.Color.light_gray()
+		)
 		
 		embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
 		await ctx.send(embed=embed_message, view=SelectClass(self), ephemeral=True)
 
 	@commands.command()
-	async def user(self, ctx):
-		if self.user_class == None:
-			message = "You have not selected a class"
+	async def player(self, ctx):
+		if self.class_name == None:
+			await ctx.send("You have not selected a class. Use `.start` command")
 		else:
-			message = f"You are {self.user_class}"
-		await ctx.send(message)
+			embed_message = discord.Embed(
+				title="Player Info",
+				color=discord.Color.dark_blue()
+			)
+			embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
+
+			weapon = self.class_info["starting_inventory"]["weapon"].capitalize()
+
+			embed_message.add_field(name="Class", value=f"{self.class_info['icon']} {self.class_name.capitalize()}", inline=False)
+			embed_message.add_field(name="Weapon", value=weapon, inline=False)
+			await ctx.send(embed=embed_message, ephemeral=True)
 
 
 class SelectClass(discord.ui.View):
@@ -43,18 +53,21 @@ class SelectClass(discord.ui.View):
 	# TODO: Dynamically define buttons
 	@discord.ui.button(label="🏹", style=discord.ButtonStyle.blurple)
 	async def archer_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-		self.user.user_class =  "archer"
-		await interaction.response.send_message(f"Poof you are {self.user.user_class}", ephemeral=True)
+		self.user.class_name =  "archer"
+		self.user.class_info = self.user.client._classes[self.user.class_name]
+		await interaction.response.send_message(f"Poof you are {self.user.class_name}", ephemeral=True)
 
 	@discord.ui.button(label="🧙", style=discord.ButtonStyle.blurple)
 	async def mage_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-		self.user.user_class = "mage"
-		await interaction.response.send_message(f"Poof you are {self.user.user_class}", ephemeral=True)
+		self.user.class_name = "mage"
+		self.user.class_info = self.user.client._classes[self.user.class_name]
+		await interaction.response.send_message(f"Poof you are {self.user.class_name}", ephemeral=True)
 
 	@discord.ui.button(label="🛡️", style=discord.ButtonStyle.blurple)
 	async def knight_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-		self.user.user_class =  "knight"
-		await interaction.response.send_message(f"Poof you are {self.user.user_class}", ephemeral=True)
+		self.user.class_name =  "knight"
+		self.user.class_info = self.user.client._classes[self.user.class_name]
+		await interaction.response.send_message(f"Poof you are {self.user.class_name}", ephemeral=True)
 
 
 async def setup(client):
