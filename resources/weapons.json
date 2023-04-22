@@ -2,7 +2,7 @@
     "bow": {
         "icon": "🏹",
         "rarity": "common",
-        "class": {
+        "job": {
             "archer": true
         },
         "stats": {
@@ -12,7 +12,7 @@
     "staff": {
         "icon": "🔥",
         "rarity": "common",
-        "class": {
+        "job": {
             "mage": true
         },
         "stats": {
@@ -22,7 +22,7 @@
     "sword": {
         "icon": "⚔️",
         "rarity": "common",
-        "class": {
+        "job": {
             "knight": true
         },
         "stats": {

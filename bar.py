@@ -16,8 +16,8 @@ class BAR(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        with open("resources/classes.json", encoding="utf8") as file:
-            self._classes = json.loads(file.read())
+        with open("resources/jobs.json", encoding="utf8") as file:
+            self._jobs = json.loads(file.read())
 
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
@@ -41,7 +41,7 @@ intents.message_content = True
 client = BAR(command_prefix='.', intents=intents)
 
 async def main():
-
+    # TODO: Remove at the end of development
     credentials_file_path = pathlib.Path("credentials", "token.json")
     with open(credentials_file_path) as cred_file:
         token = json.loads(cred_file.read())["token"]

@@ -5,7 +5,7 @@ from discord.ext import commands
 class Select(commands.Cog):
 	def __init__(self, client):
 		self.client = client
-		self.class_name = None
+		self.job = None
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -13,23 +13,23 @@ class Select(commands.Cog):
 	
 	@commands.command()
 	async def start(self, ctx):
-		class_list = []
-		for class_name, class_info in self.client._classes.items():
-			class_list.append(f"{class_info['icon']} {class_name.capitalize()}")
+		job_list = []
+		for job_name, job_info in self.client._jobs.items():
+			job_list.append(f"{job_info['icon']} {job_name.capitalize()}")
 
 		embed_message = discord.Embed(
-			title="Select Class",
-			description="\n\n".join(class_list),
+			title="Select Job",
+			description="\n\n".join(job_list),
 			color=discord.Color.light_gray()
 		)
 		
 		embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
-		await ctx.send(embed=embed_message, view=SelectClass(self), ephemeral=True)
+		await ctx.send(embed=embed_message, view=SelectJob(self), ephemeral=True)
 
 	@commands.command()
 	async def player(self, ctx):
-		if self.class_name == None:
-			await ctx.send("You have not selected a class. Use `.start` command")
+		if self.job == None:
+			await ctx.send("You have not selected a job. Use `.start` command")
 		else:
 			embed_message = discord.Embed(
 				title="Player Info",
@@ -37,37 +37,38 @@ class Select(commands.Cog):
 			)
 			embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
 
-			weapon = self.class_info["starting_inventory"]["weapon"].capitalize()
+			weapon = self.job_info["starting_inventory"]["weapon"].capitalize()
 
-			embed_message.add_field(name="Class", value=f"{self.class_info['icon']} {self.class_name.capitalize()}", inline=False)
+			embed_message.add_field(name="Job", value=f"{self.job_info['icon']} {self.job.capitalize()}", inline=False)
 			embed_message.add_field(name="Weapon", value=weapon, inline=False)
 			await ctx.send(embed=embed_message, ephemeral=True)
 
 
-class SelectClass(discord.ui.View):
+class SelectJob(discord.ui.View):
 	def __init__(self, user: Select):
 		super().__init__()
 
 		self.user = user
 
+	def set_job(self, job_name):
+		self.user.job = job_name
+		self.user.job_info = self.user.client._jobs[self.user.job]
+
 	# TODO: Dynamically define buttons
 	@discord.ui.button(label="🏹", style=discord.ButtonStyle.blurple)
 	async def archer_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-		self.user.class_name =  "archer"
-		self.user.class_info = self.user.client._classes[self.user.class_name]
-		await interaction.response.send_message(f"Poof you are {self.user.class_name}", ephemeral=True)
+		self.set_job(job_name="archer")
+		await interaction.response.send_message(f"Poof you are {self.user.job}", ephemeral=True)
 
 	@discord.ui.button(label="🧙", style=discord.ButtonStyle.blurple)
 	async def mage_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-		self.user.class_name = "mage"
-		self.user.class_info = self.user.client._classes[self.user.class_name]
-		await interaction.response.send_message(f"Poof you are {self.user.class_name}", ephemeral=True)
+		self.set_job(job_name="mage")
+		await interaction.response.send_message(f"Poof you are {self.user.job}", ephemeral=True)
 
 	@discord.ui.button(label="🛡️", style=discord.ButtonStyle.blurple)
 	async def knight_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-		self.user.class_name =  "knight"
-		self.user.class_info = self.user.client._classes[self.user.class_name]
-		await interaction.response.send_message(f"Poof you are {self.user.class_name}", ephemeral=True)
+		self.set_job(job_name="knight")
+		await interaction.response.send_message(f"Poof you are {self.user.job}", ephemeral=True)
 
 
 async def setup(client):
