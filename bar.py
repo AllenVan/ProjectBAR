@@ -5,11 +5,10 @@ import logging
 import os
 import pathlib
 
+from discord.ext import commands
 
 # TODO: Add logging to class
 logging.basicConfig(level=logging.INFO)
-
-from discord.ext import commands
 
 
 class BAR(commands.Bot):
