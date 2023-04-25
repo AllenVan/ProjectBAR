@@ -4,6 +4,11 @@
         "starting_inventory": {
             "weapon": "bow",
             "items": {}
+        },
+        "skills":{
+            "1": "aim", 
+            "2": "shoot", 
+            "3": "evade"
         }
     },
     "knight": {
@@ -11,6 +16,11 @@
         "starting_inventory": {
             "weapon": "sword",
             "items": {}
+        },
+        "skills":{
+            "1": "charge", 
+            "2": "swing", 
+            "3": "block"
         }
     },
     "mage": {
@@ -18,6 +28,11 @@
         "starting_inventory": {
             "weapon": "staff",
             "items": {}
+        },
+        "skills":{
+            "1": "chant", 
+            "2": "cast", 
+            "3": "evade"
         }
     }
 }
