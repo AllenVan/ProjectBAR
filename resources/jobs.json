@@ -1,23 +1,44 @@
 {
     "archer": {
+        "name": "Archer",
         "icon": "🏹",
+        "description": "Nimble footed marksman attacking from a distance",
         "starting_inventory": {
             "weapon": "bow",
             "items": {}
+        },
+        "skills": {
+            "1": "aim",
+            "2": "shoot",
+            "3": "evade"
         }
     },
     "knight": {
+        "name": "Knight",
         "icon": "🛡️",
+        "description": "Fearless powerful warriors charging full force",
         "starting_inventory": {
             "weapon": "sword",
             "items": {}
+        },
+        "skills": {
+            "1": "charge",
+            "2": "swing",
+            "3": "block"
         }
     },
     "mage": {
+        "name": "Mage",
         "icon": "🧙",
+        "description": "Mystical students of the arcane arts",
         "starting_inventory": {
             "weapon": "staff",
             "items": {}
+        },
+        "skills": {
+            "1": "chant",
+            "2": "cast",
+            "3": "reposition"
         }
     }
 }
