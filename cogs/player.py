@@ -16,11 +16,10 @@ class JobSelect(commands.Cog):
 	
 	@commands.command()  # .start command
 	async def start(self, ctx):
-		job_list = [x['name'] for x in self.client._jobs['Jobs']]  # create a list of job names, to be used for setting job upon user selection
 		select_menu = Select(options=[])  # create an instance of the Select() class with an empty list of options
 
 		# for loop is used to iterate through json file and create options for dropdown menu for Select() instance
-		for item in self.client._jobs['Jobs']:
+		for item in self.client._jobs.values():
 			select_menu.append_option(discord.SelectOption(
 				label=item['name'],
 				emoji=item['icon'],
@@ -31,7 +30,8 @@ class JobSelect(commands.Cog):
 		async def callback(interaction):  
 			# select_menu.values is simply an array of selections made by the user
 			# user can only choose 1 option so we use the first and only value in the array
-			self.job = self.client._jobs['Jobs'][job_list.index(select_menu.values[0])]  # job_list is used here as a quick way to reference index for "jobs" dictionary value
+			print(select_menu.values[0])
+			self.job = self.client._jobs[select_menu.values[0].lower()]  # job_list is used here as a quick way to reference index for "jobs" dictionary value
 			await interaction.response.send_message(f"You are now: {select_menu.values[0]}")
 			
 
@@ -41,7 +41,6 @@ class JobSelect(commands.Cog):
 
 		embed_message = discord.Embed(
 			title="Select Job",
-			description="\n\n".join([f"{x['icon']} {x['name']}" for x in self.client._jobs['Jobs']]),
 			color=discord.Color.light_gray()
 		)
 		
