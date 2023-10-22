@@ -1,0 +1,30 @@
+{
+    "player": {
+        "icon": "⭐",
+        "priority": 1
+    },
+    "undiscovered": {
+        "icon": "🔳",
+        "priority": 2
+    },
+    "defeated_enemy": {
+        "icon": "⚫",
+        "priority": 3
+    },
+    "enemy": {
+        "icon": "🔴",
+        "priority": 4
+    },
+    "treasure": {
+        "icon": "💵",
+        "priority": 4
+    },
+    "exit": {
+        "icon": "🚪",
+        "priority": 4
+    },
+    "discovered": {
+        "icon": "⏹️",
+        "priority": 5
+    }
+}

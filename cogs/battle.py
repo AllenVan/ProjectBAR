@@ -17,7 +17,7 @@ class battleSystem(commands.Cog):
     @commands.command()
     async def battle(self, ctx):
         if self.client.job == None:
-             await ctx.send("You have not selected a job. Use `.start` command")
+            await ctx.send("You have not selected a job. Use `.start` command")
 
         elif self.enemy:
             embed_message=discord.Embed(title=f"The {self.enemy['name']} didn't hear no bell.")

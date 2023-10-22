@@ -22,6 +22,9 @@ class BAR(commands.Bot):
         with open("resources/spawns.json", encoding="utf8") as file:
             self.spawns = json.loads(file.read())
 
+        with open("resources/map.json", encoding="utf8") as file:
+            self._map = json.loads(file.read())
+
         self.combat_skills = combatSkills()
 
     async def on_ready(self):
