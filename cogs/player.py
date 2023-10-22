@@ -49,7 +49,7 @@ class Player(commands.Cog):
 
 	@commands.command()
 	async def player(self, ctx):
-		if self.job == None:
+		if self.client.job == None:
 			await ctx.send("You have not selected a job. Use `.start` command")
 		else:
 			embed_message = discord.Embed(
@@ -58,9 +58,9 @@ class Player(commands.Cog):
 			)
 			embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
 
-			weapon = self.job["starting_inventory"]["weapon"].capitalize()
+			weapon = self.client.job["starting_inventory"]["weapon"].capitalize()
 
-			embed_message.add_field(name="Job", value=f"{self.job['name']}", inline=False)
+			embed_message.add_field(name="Job", value=f"{self.client.job['name']}", inline=False)
 			embed_message.add_field(name="Weapon", value=weapon, inline=False)
 			await ctx.send(embed=embed_message, ephemeral=True)
 

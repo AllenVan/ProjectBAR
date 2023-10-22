@@ -33,7 +33,8 @@
         "description": "Mystical students of the arcane arts",
         "starting_inventory": {
             "weapon": "staff",
-            "items": {}
+            "items": {},
+            "spells": ["fireball"]
         },
         "skills": {
             "1": "chant",
