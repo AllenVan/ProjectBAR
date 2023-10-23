@@ -35,10 +35,10 @@ class Traversal(commands.Cog):
 				
 			def set_icon(self):
 				if self.player_here:
-					if self.client.job == None:
+					if self.client.player == None:
 						icon = self.client._map["player"]["icon"]
 					else:
-						icon = self.client.job["icon"]
+						icon = self.client.player["icon"]
 				elif not self.discovered:
 					icon = self.client._map["undiscovered"]["icon"]
 				elif self.type in ["enemy", "treasure", "exit"]:
@@ -87,8 +87,8 @@ class Traversal(commands.Cog):
 		return floor
 
 	@commands.command(aliases=["mv"])
-	async def move(self, ctx, direction):
-		if self.client.job == None:
+	async def move(self, ctx, direction=None):
+		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command", ephemeral=True)
 		elif self.current_room.type == "enemy" and not self.current_room.defeated: # If player tries to move away from battle
 			await ctx.send("Running is not an option", ephemeral=True)
@@ -121,8 +121,7 @@ class Traversal(commands.Cog):
 				while self.client.enemy:
 					await asyncio.sleep(1)
 
-				if self.client.job == None: # Player died
-					# TODO: invoke reset player
+				if self.client.player == None: # Player died
 					self.floor = self.__generate_floor()
 					self.current_room = self.floor[7]
 					return
@@ -132,7 +131,7 @@ class Traversal(commands.Cog):
 				async def callback(interaction):
 					choice = select_menu.values[0]
 					if choice == "Yes":
-						# TODO: invoke reset player
+						# TODO: change to move to next floor
 						await interaction.response.send_message("You have beaten the dungeon", ephemeral=False)
 						self.__reset_floor()
 					else:
@@ -154,7 +153,7 @@ class Traversal(commands.Cog):
 
 	@commands.command(aliases=["m"])
 	async def map(self, ctx):
-		if self.client.job == None:
+		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command", ephemeral=True)
 		else:
 			self.current_room.set_icon() # Update default player icon after job selection
