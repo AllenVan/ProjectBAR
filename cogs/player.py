@@ -7,9 +7,7 @@ class Player(commands.Cog):
 	
 	def __init__(self, client):
 		self.client = client
-		self.client.job = None
-		self.client.level = 1
-		self.client.hp = 100
+		self.client.player = None
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -31,7 +29,8 @@ class Player(commands.Cog):
 		async def callback(interaction):  
 			# select_menu.values is simply an array of selections made by the user
 			# user can only choose 1 option so we use the first and only value in the array
-			self.client.job = self.client._jobs[select_menu.values[0].lower()]  # job_list is used here as a quick way to reference index for "jobs" dictionary value
+			self.client.player = self.client._jobs[select_menu.values[0].lower()].copy()  # job_list is used here as a quick way to reference index for "jobs" dictionary value
+			self.client.player["level"] = 1
 			await interaction.response.send_message(f"You are now: {select_menu.values[0]}")
 			
 
@@ -49,7 +48,7 @@ class Player(commands.Cog):
 
 	@commands.command()
 	async def player(self, ctx):
-		if self.client.job == None:
+		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command")
 		else:
 			embed_message = discord.Embed(
@@ -58,9 +57,9 @@ class Player(commands.Cog):
 			)
 			embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
 
-			weapon = self.client.job["starting_inventory"]["weapon"].capitalize()
+			weapon = self.client.player["starting_inventory"]["weapon"].capitalize()
 
-			embed_message.add_field(name="Job", value=f"{self.client.job['name']}", inline=False)
+			embed_message.add_field(name="Job", value=f"{self.client.player['name']}", inline=False)
 			embed_message.add_field(name="Weapon", value=weapon, inline=False)
 			await ctx.send(embed=embed_message, ephemeral=True)
 
