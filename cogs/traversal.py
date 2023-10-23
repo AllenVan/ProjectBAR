@@ -1,3 +1,4 @@
+import asyncio
 import discord
 import random
 
@@ -8,6 +9,9 @@ from discord.ui import Select, View
 class Traversal(commands.Cog):
 	def __init__(self, client):
 		self.client = client
+		self.__reset_floor()
+
+	def __reset_floor(self):
 		self.floor = self.__generate_floor()
 		self.current_room = self.floor[7]
 
@@ -39,7 +43,7 @@ class Traversal(commands.Cog):
 					icon = self.client._map["undiscovered"]["icon"]
 				elif self.type in ["enemy", "treasure", "exit"]:
 					if self.type == "enemy" and self.defeated:
-						icon = self.client._map["enemy_defeated"]["icon"]
+						icon = self.client._map["defeated_enemy"]["icon"]
 					else:
 						icon = self.client._map[self.type]["icon"]
 				else:
@@ -86,6 +90,8 @@ class Traversal(commands.Cog):
 	async def move(self, ctx, direction):
 		if self.client.job == None:
 			await ctx.send("You have not selected a job. Use `.start` command", ephemeral=True)
+		elif self.current_room.type == "enemy" and not self.current_room.defeated: # If player tries to move away from battle
+			await ctx.send("Running is not an option", ephemeral=True)
 		elif direction not in ("up", "down", "left", "right"):
 			await ctx.send(f"'{direction}' is not a valid direction. Try: 'up', 'down', 'left', 'right'", ephemeral=True)
 		else:
@@ -107,6 +113,42 @@ class Traversal(commands.Cog):
 			next_room.set_icon()
 
 			self.current_room = next_room
+
+			# Check for special room
+			if self.current_room.type == "enemy" and not self.current_room.defeated:
+				await ctx.invoke(self.client.get_command("battle"))
+
+				while self.client.enemy:
+					await asyncio.sleep(1)
+
+				if self.client.job == None: # Player died
+					# TODO: invoke reset player
+					self.floor = self.__generate_floor()
+					self.current_room = self.floor[7]
+					return
+				else:
+					self.current_room.defeated = True
+			elif self.current_room.type == "exit":
+				async def callback(interaction):
+					choice = select_menu.values[0]
+					if choice == "Yes":
+						# TODO: invoke reset player
+						await interaction.response.send_message("You have beaten the dungeon", ephemeral=False)
+						self.__reset_floor()
+					else:
+						await interaction.response.send_message("Your journey continues", ephemeral=False)
+					return
+
+				embed_message=discord.Embed(title="You have found the exit. Would you like to continue?")
+				select_menu = Select(options=[])
+				for item in ["Yes", "No"]:
+					select_menu.append_option(discord.SelectOption(
+						label=item
+					))
+				select_menu.callback = callback
+				view = View()
+				view.add_item(select_menu)
+				await ctx.send(embed=embed_message, view=view, ephemeral=False)
 
 			await ctx.invoke(self.client.get_command("map"))
 
