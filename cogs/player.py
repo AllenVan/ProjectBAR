@@ -27,7 +27,7 @@ class Player(commands.Cog):
 				description=item['description']
 			))
 
-		async def callback(ctx, job=None):  
+		async def callback(interaction=None, job=None):  
 			# user can only choose 1 option so we use the first and only value in the array
 			if job:
 				if job.lower() not in self.client._jobs:
@@ -37,10 +37,10 @@ class Player(commands.Cog):
 					await ctx.send(f'You are now: {self.client.job["name"]}')
 			else:
 				self.client.job = self.client._jobs[select_menu.values[0].lower()]
-				await ctx.response.send_message(f"You are now: {select_menu.values[0]}")
+				await interaction.response.send_message(f"You are now: {select_menu.values[0]}")
 			
 		if job: # Immediately set job if user passes it in
-			await callback(ctx=ctx, job=job)
+			await callback(job=job)
 		else:
 			select_menu.callback = callback  # define Select() instance callback as the above callback function
 			view = View()  # create an instance of View() in order to send a message
