@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ui import Select, View
+from skills import combatSkills
 import random
 
 def battle_end(ctx, enemy_killed):
@@ -23,6 +24,7 @@ class battleSystem(commands.Cog):
 
 	def spawn(self):
 		self.client.enemy = random.choice(self.client._spawns['mobs']).copy()
+		self.combat_skills = combatSkills()
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -36,8 +38,8 @@ class battleSystem(commands.Cog):
 
 		else:
 			async def callback(interaction):
-				self.player_message, e_damage = getattr(self.client.combat_skills, select_menu.values[0])()  # calls a function in skills.py class with the same name
-				self.enemy_message, p_damage = getattr(self.client.combat_skills, random.choice(self.client.enemy['skills']))()
+				self.player_message, e_damage = getattr(self.combat_skills, select_menu.values[0])()  # calls a function in skills.py class with the same name
+				self.enemy_message, p_damage = getattr(self.combat_skills, random.choice(self.client.enemy['skills']))()
 				
 				if self.client.enemy["HP"] - e_damage <= 0:
 					embed_message=battle_end(ctx, True)
@@ -67,7 +69,7 @@ class battleSystem(commands.Cog):
 				embed_message.set_image(url=self.client.enemy['image'])
 
 			embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
-			embed_message.set_footer(text=f'What will you do? Distance is {self.client.combat_skills.distance}. Your HP is {self.client.player["HP"]}. Enemy HP is {self.client.enemy["HP"]}.')
+			embed_message.set_footer(text=f'What will you do? Distance is {self.combat_skills.distance}. Your HP is {self.client.player["HP"]}. Enemy HP is {self.client.enemy["HP"]}.')
 
 			select_menu = Select(options=[discord.SelectOption(label=item) for item in self.client.player["skills"].values()])
 

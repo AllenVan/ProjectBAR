@@ -4,7 +4,6 @@ import json
 import logging
 import os
 import pathlib
-from skills import combatSkills
 
 from discord.ext import commands
 
@@ -20,9 +19,7 @@ class BAR(commands.Bot):
             self._jobs = json.loads(file.read())
 
         with open("resources/spawns.json", encoding="utf8") as file:
-            self._spawns = json.loads(file.read())
-
-        self.combat_skills = combatSkills()
+            self._spawns = json.loads(file.read())  
 
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
