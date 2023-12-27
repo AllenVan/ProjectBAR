@@ -32,10 +32,8 @@ class BattleSystem(commands.Cog):
 
 	@commands.command()
 	async def battle(self, ctx):
-		
 		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command")
-
 		else:
 			async def callback(interaction):
 				self.player_message, e_damage = getattr(self.combat_skills, select_menu.values[0])()  # calls a function in skills.py class with the same name
@@ -55,10 +53,9 @@ class BattleSystem(commands.Cog):
 				else:
 					self.client.player["HP"] -= p_damage
 					self.client.enemy["HP"] -= e_damage
-					await ctx.reinvoke()
+					await ctx.invoke(self.client.get_command("battle"))
 					await interaction.response.defer() # "closes" the current embed interaction now that reinvoked is called
 					
-				
 			if self.client.enemy:
 				embed_message=discord.Embed(title=f'The {self.client.enemy["name"]} did not hear no bell.', color=discord.Color.light_gray())
 				embed_message.add_field(name="Player", value=self.player_message, inline=True)

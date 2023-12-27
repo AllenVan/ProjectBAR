@@ -13,9 +13,10 @@ class Player(commands.Cog):
 	async def on_ready(self):
 		print("Loading cog: select.py")
 	
-	@commands.command()  # .start command
-	async def start(self, ctx):
-		select_menu = Select(options=[])  # create an instance of the Select() class with an empty list of options
+	@commands.command(aliases=["s"])
+	async def start(self, ctx, job=None):
+		# Populate job selection menu
+		select_menu = Select(options=[])
 
 		# for loop is used to iterate through json file and create options for dropdown menu for Select() instance
 		for item in self.client._jobs.values():
@@ -25,28 +26,36 @@ class Player(commands.Cog):
 				description=item['description']
 			))
 
-		# the function called when the user is done selecting options
-		async def callback(interaction):  
-			# select_menu.values is simply an array of selections made by the user
-			# user can only choose 1 option so we use the first and only value in the array
-			self.client.player = self.client._jobs[select_menu.values[0].lower()].copy()  # job_list is used here as a quick way to reference index for "jobs" dictionary value
-			self.client.player["level"] = 1
-			await interaction.response.send_message(f"You are now: {select_menu.values[0]}")
+		async def callback(interaction=None, job=None):
+			if job:
+				if job.lower() not in self.client._jobs:
+					await ctx.send("Invalid job. Use `.start` command to view all available jobs", ephemeral=True)
+				else:
+					self.client.player = self.client._jobs[job.lower()]
+					self.client.player["level"] = 1
+					await ctx.send(f'You are now: {self.client.player["name"]}')
+			else:
+				# user can only choose 1 option so we use the first and only value in the array
+				self.client.player = self.client._jobs[select_menu.values[0].lower()].copy()
+				self.client.player["level"] = 1
+				await interaction.response.send_message(f"You are now: {select_menu.values[0]}")
 			
+		if job: # Immediately set job if user passes it in
+			await callback(job=job)
+		else:
+			select_menu.callback = callback  # define Select() instance callback as the above callback function
+			view = View()
+			view.add_item(select_menu)
 
-		select_menu.callback = callback  # define Select() instance callback as the above callback function
-		view = View()  # create an instance of View() in order to send a message
-		view.add_item(select_menu)  # add Select() instance to View() instance
+			embed_message = discord.Embed(
+				title="Select Job",
+				color=discord.Color.light_gray()
+			)
 
-		embed_message = discord.Embed(
-			title="Select Job",
-			color=discord.Color.light_gray()
-		)
-		
-		embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
-		await ctx.send(embed=embed_message, view=view, ephemeral=True)
+			embed_message.set_author(name=ctx.author.name, icon_url=ctx.author.avatar)
+			await ctx.send(embed=embed_message, view=view, ephemeral=True)
 
-	@commands.command()
+	@commands.command(aliases=["p"])
 	async def player(self, ctx):
 		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command")
