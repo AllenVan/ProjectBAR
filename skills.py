@@ -1,6 +1,6 @@
 import random
 
-class combatSkills():
+class CombatSkills():
     def __init__(self):
         self.chant_flag = False
         self.aim_flag = False

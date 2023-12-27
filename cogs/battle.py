@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord.ui import Select, View
-from skills import combatSkills
+from skills import CombatSkills
 import random
 
 def battle_end(ctx, enemy_killed):
@@ -15,7 +15,7 @@ def battle_end(ctx, enemy_killed):
 			temp_message.set_footer(text=f"Better luck next time...")
 		return temp_message
 
-class battleSystem(commands.Cog):
+class BattleSystem(commands.Cog):
 	def __init__(self, client):
 		self.client = client
 		self.client.enemy = None
@@ -24,7 +24,7 @@ class battleSystem(commands.Cog):
 
 	def spawn(self):
 		self.client.enemy = random.choice(self.client._spawns['mobs']).copy()
-		self.combat_skills = combatSkills()
+		self.combat_skills = CombatSkills()
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -79,4 +79,4 @@ class battleSystem(commands.Cog):
 			await ctx.send(embed=embed_message, view=view, ephemeral=False)
 
 async def setup(client):
-	await client.add_cog(battleSystem(client))
+	await client.add_cog(BattleSystem(client))
