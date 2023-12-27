@@ -5,17 +5,27 @@ import random
 from discord.ext import commands
 from discord.ui import Select, View
 
+MAX_FLOORS = 3
+
 
 class Traversal(commands.Cog):
 	def __init__(self, client):
 		self.client = client
-		self.__reset_floor()
 
-	def __reset_floor(self):
-		self.floor = self.__generate_floor()
-		self.current_room = self.floor[7]
+	@commands.Cog.listener()
+	async def on_ready(self):
+		print("Loading cog: traversal.py")
 
-	def __generate_floor(self):
+	@commands.Cog.listener()
+	async def on_job_selected(self):
+		self._reset_dungeon()
+
+	def _reset_dungeon(self):
+		self.floor = self._generate_floor()
+		self.floor_count = MAX_FLOORS
+		self.current_room = self.floor[7] # Bottom middle room
+
+	def _generate_floor(self):
 		"""
 		# 0 1 2
 		# 3 4 5
@@ -96,7 +106,6 @@ class Traversal(commands.Cog):
 			await ctx.send(f"'{direction}' is not a valid direction. Try: 'up', 'down', 'left', 'right'", ephemeral=True)
 		else:
 			room_index = self.floor.index(self.current_room)
-
 			next_room_index = self.floor[room_index].directions[direction]
 			
 			if next_room_index == None:
@@ -122,18 +131,26 @@ class Traversal(commands.Cog):
 					await asyncio.sleep(1)
 
 				if self.client.player == None: # Player died
-					self.floor = self.__generate_floor()
-					self.current_room = self.floor[7]
+					self._reset_dungeon()
 					return
 				else:
 					self.current_room.defeated = True
+			elif self.current_room.type == "treasure":
+				await ctx.send("You found a treasure room...but it has already been looted", ephemeral=True)
 			elif self.current_room.type == "exit":
 				async def callback(interaction):
 					choice = select_menu.values[0]
 					if choice == "Yes":
-						# TODO: change to move to next floor
-						await interaction.response.send_message("You have beaten the dungeon", ephemeral=False)
-						self.__reset_floor()
+						self.floor_count -= 1
+
+						if self.floor_count == 0:
+							await interaction.response.send_message("You have beaten the dungeon", ephemeral=False)
+							self._reset_dungeon()
+							self.client.dispatch("dungeon_beat")
+						else:
+							await interaction.response.send_message("You descend further into darkness", ephemeral=False)
+							self.floor = self._generate_floor()
+							self.current_room = self.floor[7]
 					else:
 						await interaction.response.send_message("Your journey continues", ephemeral=False)
 					return
@@ -159,7 +176,7 @@ class Traversal(commands.Cog):
 			self.current_room.set_icon() # Update default player icon after job selection
 
 			embed_message = discord.Embed(
-				title="Map",
+				title=f"Floor {(MAX_FLOORS + 1) - self.floor_count}",
 				color=discord.Color.dark_red()
 			)
 
