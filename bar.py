@@ -18,6 +18,9 @@ class BAR(commands.Bot):
         with open("resources/jobs.json", encoding="utf8") as file:
             self._jobs = json.loads(file.read())
 
+        with open("resources/spawns.json", encoding="utf8") as file:
+            self._spawns = json.loads(file.read())  
+
     async def on_ready(self):
         print(f'Logged on as {self.user}!')
 

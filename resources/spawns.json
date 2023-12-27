@@ -1,0 +1,25 @@
+{
+    "mobs": [
+        {
+            "name": "Apple of Rizz",
+            "icon": "🍎",
+            "HP": 15,
+            "image": "https://i.imgflip.com/74n62t.jpg",
+            "skills": ["leer", "bites_lip", "idle"]
+        },
+        {
+            "name": "Minotaur",
+            "icon": "🐂",
+            "HP": 30,
+            "image": "https://static.wikia.nocookie.net/megamitensei/images/3/3e/Minotaur_%28SMTIV%29.png/revision/latest/scale-to-width-down/270?cb=20220828061231",
+            "skills": ["rush", "kick", "idle"]
+        },
+        {
+            "name": "Lord of the Heavenly Prison",
+            "icon": "👁‍🗨",
+            "HP": 50,
+            "image": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5a6af839-076e-448b-b7e8-47dcfb1f1af3/df4xe48-c0dd2a28-1ba0-4cfb-8694-99f41e42349a.png/v1/fit/w_828,h_826/lord_of_the_heavenly_prison_render_by_henukim_df4xe48-414w-2x.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MjAyMiIsInBhdGgiOiJcL2ZcLzVhNmFmODM5LTA3NmUtNDQ4Yi1iN2U4LTQ3ZGNmYjFmMWFmM1wvZGY0eGU0OC1jMGRkMmEyOC0xYmEwLTRjZmItODY5NC05OWY0MWU0MjM0OWEucG5nIiwid2lkdGgiOiI8PTIwMjYifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.adQMCZIW9ertuE9vwZ_QZA7jDO2zevix1nKxRjyTI6w",
+            "skills": ["imprison", "eradicate", "idle"]
+        }
+    ]
+}

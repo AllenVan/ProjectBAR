@@ -3,6 +3,7 @@
         "name": "Archer",
         "icon": "🏹",
         "description": "Nimble footed marksman attacking from a distance",
+        "HP" : 100,
         "starting_inventory": {
             "weapon": "bow",
             "items": {}
@@ -17,6 +18,7 @@
         "name": "Knight",
         "icon": "🛡️",
         "description": "Fearless powerful warriors charging full force",
+        "HP" : 120,
         "starting_inventory": {
             "weapon": "sword",
             "items": {}
@@ -31,9 +33,11 @@
         "name": "Mage",
         "icon": "🧙",
         "description": "Mystical students of the arcane arts",
+        "HP" : 90,
         "starting_inventory": {
             "weapon": "staff",
-            "items": {}
+            "items": {},
+            "spells": ["fireball"]
         },
         "skills": {
             "1": "chant",
