@@ -15,11 +15,27 @@
             "skills": ["rush", "kick", "idle"]
         },
         {
+            "name": "Skeleton Soldier",
+            "icon": "💀",
+            "HP": 40,
+            "image": "https://static.wikia.nocookie.net/heroesandcastles2/images/4/4b/Skeletonwarrior.PNG/revision/latest?cb=20150528160658",
+            "skills": ["shield", "cleave", "sidestep"]
+        }
+    ],
+    "bosses": [
+        {
             "name": "Lord of the Heavenly Prison",
             "icon": "👁‍🗨",
-            "HP": 50,
+            "HP": 100,
             "image": "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5a6af839-076e-448b-b7e8-47dcfb1f1af3/df4xe48-c0dd2a28-1ba0-4cfb-8694-99f41e42349a.png/v1/fit/w_828,h_826/lord_of_the_heavenly_prison_render_by_henukim_df4xe48-414w-2x.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9MjAyMiIsInBhdGgiOiJcL2ZcLzVhNmFmODM5LTA3NmUtNDQ4Yi1iN2U4LTQ3ZGNmYjFmMWFmM1wvZGY0eGU0OC1jMGRkMmEyOC0xYmEwLTRjZmItODY5NC05OWY0MWU0MjM0OWEucG5nIiwid2lkdGgiOiI8PTIwMjYifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.adQMCZIW9ertuE9vwZ_QZA7jDO2zevix1nKxRjyTI6w",
             "skills": ["imprison", "eradicate", "idle"]
+        },
+        {
+            "name": "Chimera",
+            "icon": "🦁",
+            "HP": 100,
+            "image": "https://p7.hiclipart.com/preview/17/621/183/dragon-chimera-legendary-creature-wikia-monster-dragon.jpg",
+            "skills": ["claw", "rush", "snarl"]
         }
     ]
 }

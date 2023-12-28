@@ -30,7 +30,7 @@ class BattleSystem(commands.Cog):
 	async def on_ready(self):
 		print("Loading cog: battle.py")
 
-	@commands.command()
+	@commands.command(description="start a fight")
 	async def battle(self, ctx):
 		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command")
@@ -51,8 +51,9 @@ class BattleSystem(commands.Cog):
 					view.remove_item(select_menu)
 					await interaction.response.send_message(embed=embed_message, view=view, ephemeral=False)
 				else:
-					self.client.player["HP"] -= p_damage
-					self.client.enemy["HP"] -= e_damage
+					self.client.enemy["HP"] -= max(e_damage + self.combat_skills.damage_modifiers[0], 0)
+					self.client.player["HP"] -= max(p_damage + self.combat_skills.damage_modifiers[1], 0)
+					self.combat_skills.damage_modifiers = [0,0]
 					await ctx.invoke(self.client.get_command("battle"))
 					await interaction.response.defer() # "closes" the current embed interaction now that reinvoked is called
 					
