@@ -30,7 +30,7 @@ class BattleSystem(commands.Cog):
 	async def on_ready(self):
 		print("Loading cog: battle.py")
 
-	@commands.command(description="start a fight")
+	@commands.command()
 	async def battle(self, ctx):
 		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command")
