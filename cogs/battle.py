@@ -22,15 +22,15 @@ class BattleSystem(commands.Cog):
 		self.player_message = None
 		self.enemy_message = None
 
-	def spawn(self):
-		self.client.enemy = random.choice(self.client._spawns['mobs']).copy()
-		self.combat_skills = CombatSkills()
-
 	@commands.Cog.listener()
 	async def on_ready(self):
 		print("Loading cog: battle.py")
 
-	@commands.command()
+	def spawn(self):
+		self.client.enemy = random.choice(self.client._spawns['mobs']).copy()
+		self.combat_skills = CombatSkills()
+
+	@commands.command(aliases=["b"])
 	async def battle(self, ctx):
 		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command")

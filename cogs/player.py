@@ -4,14 +4,18 @@ from discord.ui import Select, View
 
 
 class Player(commands.Cog):
-	
 	def __init__(self, client):
 		self.client = client
 		self.client.player = None
+		self.client.start_ctx = None
 
 	@commands.Cog.listener()
 	async def on_ready(self):
 		print("Loading cog: select.py")
+
+	@commands.Cog.listener()
+	async def on_dungeon_beat(self):
+		self.client.player = None
 	
 	@commands.command(aliases=["s"])
 	async def start(self, ctx, job=None):
@@ -39,6 +43,9 @@ class Player(commands.Cog):
 				self.client.player = self.client._jobs[select_menu.values[0].lower()].copy()
 				self.client.player["level"] = 1
 				await interaction.response.send_message(f"You are now: {select_menu.values[0]}")
+
+			self.client.dispatch("job_selected")
+			self.client.start_ctx = ctx
 			
 		if job: # Immediately set job if user passes it in
 			await callback(job=job)
