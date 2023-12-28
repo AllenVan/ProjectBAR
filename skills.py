@@ -119,4 +119,3 @@ class CombatSkills():
 
     def idle(self):
         return "The enemy does nothing", 0
-    
