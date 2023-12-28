@@ -5,12 +5,14 @@ import random
 from discord.ext import commands
 from discord.ui import Select, View
 
-MAX_FLOORS = 3
+MAX_FLOORS = 5
 
 
 class Traversal(commands.Cog):
 	def __init__(self, client):
 		self.client = client
+		self.last_map_ctx = None
+		self.last_exit_ctx = None
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -19,6 +21,30 @@ class Traversal(commands.Cog):
 	@commands.Cog.listener()
 	async def on_job_selected(self):
 		self._reset_dungeon()
+		await self.client.start_ctx.invoke(self.client.get_command("map"))
+
+	@commands.Cog.listener()
+	async def on_interaction(self, interaction): # Handle button presses
+		id = interaction.data["custom_id"]
+
+		if id in ("up", "down", "left", "right"): # Direction Buttons
+			await self.last_map_ctx.invoke(self.client.get_command("move"), direction=id)
+		elif id in ("yes_exit", "no_exit"): # Floor Exit
+			if id == "yes_exit":
+				self.floor_count -= 1
+
+				if self.floor_count == 0:
+					await interaction.response.send_message("You have beaten the dungeon", ephemeral=False)
+					self._reset_dungeon()
+					self.client.dispatch("dungeon_beat")
+					return
+				else:
+					await interaction.response.send_message("You descend further into darkness", ephemeral=False)
+					self.floor = self._generate_floor()
+					self.current_room = self.floor[7]
+			elif id == "no_exit":
+				await interaction.response.send_message("Your journey continues", ephemeral=False)
+			await self.last_exit_ctx.invoke(self.client.get_command("map"))
 
 	def _reset_dungeon(self):
 		self.floor = self._generate_floor()
@@ -124,49 +150,38 @@ class Traversal(commands.Cog):
 			self.current_room = next_room
 
 			# Check for special room
-			if self.current_room.type == "enemy" and not self.current_room.defeated:
-				await ctx.invoke(self.client.get_command("battle"))
-
-				while self.client.enemy:
-					await asyncio.sleep(1)
-
-				if self.client.player == None: # Player died
-					self._reset_dungeon()
-					return
-				else:
-					self.current_room.defeated = True
-			elif self.current_room.type == "treasure":
-				await ctx.send("You found a treasure room...but it has already been looted", ephemeral=True)
-			elif self.current_room.type == "exit":
-				async def callback(interaction):
-					choice = select_menu.values[0]
-					if choice == "Yes":
-						self.floor_count -= 1
-
-						if self.floor_count == 0:
-							await interaction.response.send_message("You have beaten the dungeon", ephemeral=False)
-							self._reset_dungeon()
-							self.client.dispatch("dungeon_beat")
-						else:
-							await interaction.response.send_message("You descend further into darkness", ephemeral=False)
-							self.floor = self._generate_floor()
-							self.current_room = self.floor[7]
-					else:
-						await interaction.response.send_message("Your journey continues", ephemeral=False)
-					return
+			if self.current_room.type == "exit":
+				self.last_exit_ctx = ctx # Save context of current exit for interaction listener
 
 				embed_message=discord.Embed(title="You have found the exit. Would you like to continue?")
-				select_menu = Select(options=[])
-				for item in ["Yes", "No"]:
-					select_menu.append_option(discord.SelectOption(
-						label=item
-					))
-				select_menu.callback = callback
-				view = View()
-				view.add_item(select_menu)
-				await ctx.send(embed=embed_message, view=view, ephemeral=False)
 
-			await ctx.invoke(self.client.get_command("map"))
+				class ExitButton(discord.ui.View):
+					@discord.ui.button(label="Yes", custom_id="yes_exit", style=discord.ButtonStyle.green)
+					async def yes_exit_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+						pass # Interaction to be handled by listener
+
+					@discord.ui.button(label="No", custom_id="no_exit", style=discord.ButtonStyle.red)
+					async def no_exit_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+						pass # Interaction to be handled by listener
+
+				await ctx.send(embed=embed_message, view=ExitButton(), ephemeral=False)
+			else:
+				if self.current_room.type == "enemy" and not self.current_room.defeated:
+					await ctx.invoke(self.client.get_command("battle"))
+
+					while self.client.enemy:
+						await asyncio.sleep(1)
+
+					if self.client.player == None: # Player died
+						self._reset_dungeon()
+						return
+					else:
+						self.current_room.defeated = True
+				elif self.current_room.type == "treasure":
+					embed_message=discord.Embed(title="You found a treasure room...but it has already been looted")
+					await ctx.send(embed=embed_message, ephemeral=True)
+
+				await ctx.invoke(self.client.get_command("map"))
 
 	@commands.command(aliases=["m"])
 	async def map(self, ctx):
@@ -185,10 +200,27 @@ class Traversal(commands.Cog):
 			{self.floor[3].icon} {self.floor[4].icon} {self.floor[5].icon}
 			{self.floor[6].icon} {self.floor[7].icon} {self.floor[8].icon}
 			"""
-
 			embed_message.add_field(name="", value=map_string, inline=False)
-			await ctx.send(embed=embed_message, ephemeral=False)
+			self.last_map_ctx = ctx # Save context of current command for interaction listener
 
+			class DirectionButton(discord.ui.View):
+				@discord.ui.button(label="", custom_id="left", style=discord.ButtonStyle.primary, emoji="⬅️")
+				async def left_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+					await interaction.response.defer()
+
+				@discord.ui.button(label="", custom_id="up", style=discord.ButtonStyle.primary, emoji="⬆️")
+				async def up_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+					await interaction.response.defer()
+
+				@discord.ui.button(label="", custom_id="down", style=discord.ButtonStyle.primary, emoji="⬇️")
+				async def down_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+					await interaction.response.defer()
+
+				@discord.ui.button(label="", custom_id="right", style=discord.ButtonStyle.primary, emoji="➡️")
+				async def right_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+					await interaction.response.defer()
+			
+			await ctx.send(embed=embed_message, view=DirectionButton(), ephemeral=False)
 
 async def setup(client):
 	await client.add_cog(Traversal(client))

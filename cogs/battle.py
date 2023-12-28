@@ -30,7 +30,7 @@ class BattleSystem(commands.Cog):
 		self.client.enemy = random.choice(self.client._spawns['mobs']).copy()
 		self.combat_skills = CombatSkills()
 
-	@commands.command()
+	@commands.command(aliases=["b"])
 	async def battle(self, ctx):
 		if self.client.player == None:
 			await ctx.send("You have not selected a job. Use `.start` command")

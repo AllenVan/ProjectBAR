@@ -7,6 +7,7 @@ class Player(commands.Cog):
 	def __init__(self, client):
 		self.client = client
 		self.client.player = None
+		self.client.start_ctx = None
 
 	@commands.Cog.listener()
 	async def on_ready(self):
@@ -44,6 +45,7 @@ class Player(commands.Cog):
 				await interaction.response.send_message(f"You are now: {select_menu.values[0]}")
 
 			self.client.dispatch("job_selected")
+			self.client.start_ctx = ctx
 			
 		if job: # Immediately set job if user passes it in
 			await callback(job=job)
